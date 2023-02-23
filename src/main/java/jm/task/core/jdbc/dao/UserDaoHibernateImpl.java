@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class UserDaoHibernateImpl implements UserDao {
-    Connection connection = Util.getConnection();
+
     public UserDaoHibernateImpl() {
 
     }
@@ -77,16 +77,9 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public List<User> getAllUsers() {
-        Transaction transaction = null;
         try (Session session = Util.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            List<User> list = session.createNativeQuery("SELECT u FROM User u", User.class).list();
-
-            transaction.commit();
-        } catch (Exception e ) {
-            transaction.rollback();
-        }return list;
-
+           return session.createQuery("from User", User.class).getResultList();
+        }
     }
 
     @Override
@@ -94,10 +87,7 @@ public class UserDaoHibernateImpl implements UserDao {
         Transaction transaction = null;
         try (Session session = Util.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            List<User> list = session.createQuery("from User ").getResultList();
-            for (User u : list) {
-                session.delete(u);
-            }
+            session.createQuery("DELETE FROM User").executeUpdate();
             transaction.commit();
         } catch (Exception e ) {
             transaction.rollback();
