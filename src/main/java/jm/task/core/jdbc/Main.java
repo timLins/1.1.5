@@ -22,7 +22,6 @@ public class Main {
         userDao.saveUser("Name4", "LastName4", (byte) 38);
         userDao.removeUserById(1);
         List<User> list = userDao.getAllUsers();
-        System.out.println(list);
         userDao.cleanUsersTable();
         userDao.dropUsersTable();
     }
